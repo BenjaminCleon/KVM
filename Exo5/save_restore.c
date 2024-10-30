@@ -154,6 +154,8 @@ void save_domain_by_name(virConnectPtr conn, char *name)
 {
     virDomainPtr domain;
     domain = virDomainLookupByName(conn, name);
+    char uri[100];
+    sprintf(uri, "/var/lib/libvirt/qemu/save/%s", name);
     virDomainSave(domain, "/var/lib/libvirt/qemu/save");
     virDomainFree(domain);
     return;
@@ -161,7 +163,9 @@ void save_domain_by_name(virConnectPtr conn, char *name)
 
 void restore_domain_by_name(virConnectPtr conn, char *name)
 {
-    virDomainRestore(conn, "/var/lib/libvirt/qemu/save");
+    char uri[100];
+    sprintf(uri, "/var/lib/libvirt/qemu/save/%s", name);
+    virDomainRestore(conn, uri);
     return;
 }
 
