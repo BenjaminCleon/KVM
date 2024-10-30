@@ -71,7 +71,7 @@ void list_domain_infos(virConnectPtr conn, char *state)
 		virDomainFree(domains[i]);
 	}
 
-	if (num_domains == 0) printf("No %s domains\n", state);
+	if (num_domains == 0) puts("No domains\n");
 	else                  free(domains);
 	
 	return;
