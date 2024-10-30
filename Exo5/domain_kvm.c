@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
 	virConnectPtr conn;
 
-	//printf("Type an IP Address: \n");
+	printf("Type an IP Address: \n");
 	char ip[15];
 	scanf("%s", ip);
 

@@ -5,8 +5,8 @@
 
 void print_hostname(virConnectPtr conn);
 void list_domain_infos(virConnectPtr conn, char *state);
-void suspend_all_active_domain(virConnectPtr conn);
-void resume_all_inactive_domain(virConnectPtr conn);
+void destroy_all_active_domain(virConnectPtr conn);
+void create_all_inactive_domain(virConnectPtr conn);
 
 int main(int argc, char *argv[])
 {
@@ -38,12 +38,12 @@ int main(int argc, char *argv[])
 	list_domain_infos(conn, "inactive");
 
 	// Suspend all active domains
-	suspend_all_active_domain(conn);
+	destroy_all_active_domain(conn);
 	printf("\nAll active domains\n");
 	list_domain_infos(conn, "active");
 
 	// Resume all inactive domains
-	resume_all_inactive_domain(conn);
+	create_all_inactive_domain(conn);
 	printf("\nAll inactive domains\n");
 	list_domain_infos(conn, "inactive");
 
@@ -51,17 +51,18 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+
 void list_domain_infos(virConnectPtr conn, char *state)
 {
-	virDomainInfoPtr domains_info;
+	virDomainInfoPtr domains_info = malloc(sizeof(virDomainInfo));
 
 	virDomainPtr *domains;
 	int num_domains;
-	if (   strcmp(state,"active") == 0 )
+	if (   strncmp(state,"active", strlen("active")) == 0 )
 	{
 		num_domains = virConnectListAllDomains(conn, &domains, VIR_CONNECT_LIST_DOMAINS_ACTIVE);
 	}
-	else if ( strcmp(state,"inactive") == 0 )
+	else if ( strncmp(state,"inactive", strlen("inactive")) == 0 )
 	{
 		num_domains = virConnectListAllDomains(conn, &domains, VIR_CONNECT_LIST_DOMAINS_INACTIVE);
 	}
@@ -80,13 +81,14 @@ void list_domain_infos(virConnectPtr conn, char *state)
 		virDomainFree(domains[i]);
 	}
 
-	if (num_domains == 0) printf("No %s domains\n", state);
-	else                  free(domains);
+	if (num_domains == 0) puts("No domains\n");
+	
+	free(domains);
 	
 	return;
 }
 
-void suspend_all_active_domain(virConnectPtr conn)
+void destroy_all_active_domain(virConnectPtr conn)
 {
 	virDomainPtr *domains;
 	int num_domains;
@@ -94,7 +96,7 @@ void suspend_all_active_domain(virConnectPtr conn)
 
 	for (int i = 0; i < num_domains; i++) 
 	{
-		virDomainSuspend(domains[i]);
+		virDomainDestroy(domains[i]);
 		virDomainFree(domains[i]);
 	}
 
@@ -102,7 +104,7 @@ void suspend_all_active_domain(virConnectPtr conn)
 	return;
 }
 
-void resume_all_inactive_domain(virConnectPtr conn)
+void create_all_inactive_domain(virConnectPtr conn)
 {
 	virDomainPtr *domains;
 	int num_domains;
@@ -110,7 +112,7 @@ void resume_all_inactive_domain(virConnectPtr conn)
 
 	for (int i = 0; i < num_domains; i++) 
 	{
-		virDomainResume(domains[i]);
+		virDomainCreate(domains[i]);
 		virDomainFree(domains[i]);
 	}
 
