@@ -6,7 +6,13 @@ int main(int argc, char *argv[])
 {
 	virConnectPtr conn;
 
-	conn = virConnectOpenAuth("qemu+ssh://192.168.20.22/system", virConnectAuthPtrDefault, 0);
+	printf("Type an IP Address: \n");
+	char ip[15];
+	scanf("%s", ip);
+
+	char uri[100];
+	sprintf(uri, "qemu+ssh://%s/system", ip);
+	conn = virConnectOpenAuth(uri, virConnectAuthPtrDefault, 0);
 	if (conn == NULL) {
 		fprintf(stderr, "Failed to open connection to qemu+tcp://localhost/system\n");
 		return 1;
