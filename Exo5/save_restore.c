@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	}
 
 	printf("Connection opened successfully\n");
-	
+
 	// Hostname
 	print_hostname(conn);
 
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    
+
 
 	virConnectClose(conn);
 	return 0;
@@ -111,7 +111,7 @@ void list_domain_infos(virConnectPtr conn, char *state)
 		num_domains = virConnectListAllDomains(conn, &domains, VIR_CONNECT_LIST_DOMAINS_INACTIVE);
 	}
 
-	for (int i = 0; i < num_domains; i++) 
+	for (int i = 0; i < num_domains; i++)
 	{
 		virDomainGetInfo(domains[i], domains_info);
 
@@ -120,15 +120,15 @@ void list_domain_infos(virConnectPtr conn, char *state)
 		printf("maxMem: %ld\n"  , domains_info->maxMem   );
 		printf("memory: %ld\n"  , domains_info->memory   );
 		printf("nrVirtCpu: %d\n", domains_info->nrVirtCpu);
-		printf("cpuTime: %lld\n", domains_info->cpuTime  );   
-		
+		printf("cpuTime: %lld\n", domains_info->cpuTime  );
+
 		virDomainFree(domains[i]);
 	}
 
 	if (num_domains == 0) puts("No domains\n");
-	
+
 	free(domains);
-	
+
 	return;
 }
 
@@ -161,10 +161,7 @@ void save_domain_by_name(virConnectPtr conn, char *name)
 
 void restore_domain_by_name(virConnectPtr conn, char *name)
 {
-    virDomainPtr domain;
-    domain = virDomainLookupByName(conn, name);
-    virDomainRestore(domain, "/var/lib/libvirt/qemu/save");
-    virDomainFree(domain);
+    virDomainRestore(conn, "/var/lib/libvirt/qemu/save");
     return;
 }
 
