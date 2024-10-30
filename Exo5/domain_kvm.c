@@ -65,13 +65,12 @@ void list_domain_infos(virConnectPtr conn, char *state)
         printf("maxMem: %ld\n"  , domains_info->maxMem   );
         printf("memory: %ld\n"  , domains_info->memory   );
         printf("nrVirtCpu: %d\n", domains_info->nrVirtCpu);
-        printf("cpuTime: %ld\n" , domains_info->cpuTime  );   
+        printf("cpuTime: %lld\n" , domains_info->cpuTime  );   
         
         virDomainFree(domains[i]);
     }
 
     free(domains);
-    free(domains_info);
 }
 
 void print_hostname(virConnectPtr conn)
