@@ -5,8 +5,8 @@
 
 void print_hostname(virConnectPtr conn);
 void list_domain_infos(virConnectPtr conn, char *state);
-void destroy_domain_by_id(virConnectPtr conn, int id);
-void create_domain_by_id(virConnectPtr conn, int id);
+void destroy_domain_by_name(virConnectPtr conn, char * name);
+void create_domain_by_name(virConnectPtr conn, char * name);
 
 int main(int argc, char *argv[])
 {
@@ -38,12 +38,12 @@ int main(int argc, char *argv[])
 	list_domain_infos(conn, "inactive");
 
 	// Suspend all active domains
-	destroy_domain_by_id(conn, 9);
+	destroy_domain_by_name(conn, 9);
 	printf("\nAll active domains\n");
 	list_domain_infos(conn, "active");
 
 	// Resume all inactive domains
-	create_domain_by_id(conn, 9);
+	create_domain_by_name(conn, 9);
 	printf("\nAll inactive domains\n");
 	list_domain_infos(conn, "inactive");
 
@@ -88,19 +88,19 @@ void list_domain_infos(virConnectPtr conn, char *state)
 	return;
 }
 
-void destroy_domain_by_id(virConnectPtr conn, int id)
+void destroy_domain_by_name(virConnectPtr conn, char *name)
 {
 	virDomainPtr domain;
-	domain = virDomainLookupByID(conn, id);
+	domain = virDomainLookupByName(conn, name);
 	virDomainDestroy(domain);
 	virDomainFree(domain);
 	return;
 }
 
-void create_domain_by_id(virConnectPtr conn, int id)
+void create_domain_by_name(virConnectPtr conn, char *name)
 {
 	virDomainPtr domain;
-	domain = virDomainLookupByID(conn, id);
+	domain = virDomainLookupByName(conn,  name);
 	virDomainCreate(domain);
 	virDomainFree(domain);
 	return;
