@@ -55,8 +55,8 @@ void list_domain_infos(virConnectPtr conn, char *state)
     {
         num_domains = virConnectListAllDomains(conn, &domains, VIR_CONNECT_LIST_DOMAINS_INACTIVE);
     }
-
-    put("Test\n");
+    
+    puts("Test\n");
 
     for (int i = 0; i < num_domains; i++) 
     {
@@ -69,15 +69,15 @@ void list_domain_infos(virConnectPtr conn, char *state)
         printf("nrVirtCpu: %d\n", domains_info->nrVirtCpu);
         printf("cpuTime: %lld\n", domains_info->cpuTime  );   
         
-        free(domains[i]);
+        virDomainFree(domains[i]);
     }
 
-    put("Test1\n");
+    puts("Test1\n");
 
     if (num_domains == 0) printf("No %s domains\n", state);
-    else                  free(domains);
+    else                  virDomainFree(domains);
     
-    put("Test2\n");
+    puts("Test2\n");
 }
 
 void print_hostname(virConnectPtr conn)
