@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	//printf("Connection opened successfully\n");
+	printf("Connection opened successfully\n");
 	
 	// Hostname
 	print_hostname(conn);
@@ -30,11 +30,11 @@ int main(int argc, char *argv[])
 	// List
 
 	// List Active VM
-	//printf("Active domains:\n");
+	printf("Active domains:\n");
 	list_domain_infos(conn, "active");
 
 	// List Inactive VM
-	//printf("Inactive domains:\n");
+	printf("Inactive domains:\n");
 	list_domain_infos(conn, "inactive");
 
 	virConnectClose(conn);
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 
 void list_domain_infos(virConnectPtr conn, char *state)
 {
-	virDomainInfoPtr domains_info;
+	virDomainInfoPtr domains_info = malloc(sizeof(virDomainInfo));
 
 	virDomainPtr *domains;
 	int num_domains;
@@ -61,12 +61,12 @@ void list_domain_infos(virConnectPtr conn, char *state)
 	{
 		virDomainGetInfo(domains[i], domains_info);
 
-		//printf("id: %d, nom: %s\n", virDomainGetID(domains[i]), virDomainGetName(domains[i]));
-		//printf("state: %c\n"    , domains_info->state    );
-		//printf("maxMem: %ld\n"  , domains_info->maxMem   );
-		//printf("memory: %ld\n"  , domains_info->memory   );
-		//printf("nrVirtCpu: %d\n", domains_info->nrVirtCpu);
-		//printf("cpuTime: %lld\n", domains_info->cpuTime  );   
+		printf("id: %d, nom: %s\n", virDomainGetID(domains[i]), virDomainGetName(domains[i]));
+		printf("state: %c\n"    , domains_info->state    );
+		printf("maxMem: %ld\n"  , domains_info->maxMem   );
+		printf("memory: %ld\n"  , domains_info->memory   );
+		printf("nrVirtCpu: %d\n", domains_info->nrVirtCpu);
+		printf("cpuTime: %lld\n", domains_info->cpuTime  );   
 		
 		virDomainFree(domains[i]);
 	}
@@ -83,7 +83,7 @@ void print_hostname(virConnectPtr conn)
 	char *host;
 
 	host = virConnectGetHostname(conn);
-	//fprintf(stdout, "Hostname:%s\n", host);
+	fprintf(stdout, "Hostname:%s\n", host);
 
 	return;
 }
