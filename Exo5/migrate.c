@@ -118,12 +118,13 @@ void migrate_domain(virConnectPtr src, char *name, char *dst_name)
     sprintf(uri, "qemu+ssh://%s/system", dst_name);
 
     dst = virConnectOpenAuth(uri, virConnectAuthPtrDefault, 0);
-    if (conn == NULL) {
+    if (dst == NULL) {
 		fprintf(stderr, "Failed to open connection to dst\n");
 		return ;
 	}
+    	
 
-    virDomainMigrate(domain, dst, VIR_MIGRATE_LIVE, NULL, NULL, 0);
+    virDomainMigrate(domain, dst, VIR_MIGRATE_LIVE|VIR_MIGRATE_UNSAFE, NULL, NULL, 0);
     puts("Migration done");
     virDomainFree(domain);
     virConnectClose(dst);
