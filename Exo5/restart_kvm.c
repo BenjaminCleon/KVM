@@ -5,8 +5,8 @@
 
 void print_hostname(virConnectPtr conn);
 void list_domain_infos(virConnectPtr conn, char *state);
-void destroy_domain_by_id(virConnectPtr conn);
-void create_domain_by_id(virConnectPtr conn);
+void destroy_domain_by_id(virConnectPtr conn, int id);
+void create_domain_by_id(virConnectPtr conn, int id);
 
 int main(int argc, char *argv[])
 {
