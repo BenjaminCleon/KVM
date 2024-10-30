@@ -48,11 +48,11 @@ void list_domain_infos(virConnectPtr conn, char *state)
 
 	virDomainPtr *domains;
 	int num_domains;
-	if (   strcmp(state,"active") == 0 )
+	if (   strncmp(state,"active", strlen("active")) == 0 )
 	{
 		num_domains = virConnectListAllDomains(conn, &domains, VIR_CONNECT_LIST_DOMAINS_ACTIVE);
 	}
-	else if ( strcmp(state,"inactive") == 0 )
+	else if ( strncmp(state,"inactive", strlen("inactive")) == 0 )
 	{
 		num_domains = virConnectListAllDomains(conn, &domains, VIR_CONNECT_LIST_DOMAINS_INACTIVE);
 	}
@@ -72,7 +72,8 @@ void list_domain_infos(virConnectPtr conn, char *state)
 	}
 
 	if (num_domains == 0) puts("No domains\n");
-	else                  free(domains);
+	
+	free(domains);
 	
 	return;
 }
@@ -83,7 +84,6 @@ void print_hostname(virConnectPtr conn)
 
 	host = virConnectGetHostname(conn);
 	//fprintf(stdout, "Hostname:%s\n", host);
-	free(host);
 
 	return;
 }
