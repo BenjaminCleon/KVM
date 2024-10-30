@@ -38,12 +38,12 @@ int main(int argc, char *argv[])
 	list_domain_infos(conn, "inactive");
 
 	// Suspend all active domains
-	destroy_domain_by_name(conn, 9);
+	destroy_domain_by_name(conn, "debian11");
 	printf("\nAll active domains\n");
 	list_domain_infos(conn, "active");
 
 	// Resume all inactive domains
-	create_domain_by_name(conn, 9);
+	create_domain_by_name(conn, "debian11");
 	printf("\nAll inactive domains\n");
 	list_domain_infos(conn, "inactive");
 
