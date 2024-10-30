@@ -30,21 +30,21 @@ int main(int argc, char *argv[])
 	print_hostname(conn);
 
 	// List Active VM
-	printf("Active domains:\n");
+	printf("\nActive domains:\n");
 	list_domain_infos(conn, "active");
 
 	// List Inactive VM
-	printf("Inactive domains:\n");
+	printf("\nInactive domains:\n");
 	list_domain_infos(conn, "inactive");
 
 	// Suspend all active domains
 	suspend_all_active_domain(conn);
-	printf("All active domains\n");
+	printf("\nAll active domains\n");
 	list_domain_infos(conn, "active");
 
 	// Resume all inactive domains
 	resume_all_inactive_domain(conn);
-	printf("All inactive domains\n");
+	printf("\nAll inactive domains\n");
 	list_domain_infos(conn, "inactive");
 
 	virConnectClose(conn);

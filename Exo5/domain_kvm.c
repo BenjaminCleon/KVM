@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 	list_domain_infos(conn, "inactive");
 
 	virConnectClose(conn);
+	puts("Connection closed");
 	return 0;
 }
 
