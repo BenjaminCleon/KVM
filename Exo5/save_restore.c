@@ -7,6 +7,8 @@ void print_hostname(virConnectPtr conn);
 void list_domain_infos(virConnectPtr conn, char *state);
 void destroy_domain_by_name(virConnectPtr conn, char * name);
 void create_domain_by_name(virConnectPtr conn, char * name);
+void save_domain_by_name(virConnectPtr conn, char * name);
+void restore_domain_by_name(virConnectPtr conn, char * name);
 
 int main(int argc, char *argv[])
 {
@@ -29,23 +31,65 @@ int main(int argc, char *argv[])
 	// Hostname
 	print_hostname(conn);
 
-	// List Active VM
-	printf("\nActive domains:\n");
-	list_domain_infos(conn, "active");
+    // Main loop
+    int choice = 0;
 
-	// List Inactive VM
-	printf("\nInactive domains:\n");
-	list_domain_infos(conn, "inactive");
+    while(choice != 8)
+    {
+        puts("What do you want to do?");
+        puts("1. List active domains");
+        puts("2. List inactive domains");
+        puts("3. Destroy a domain");
+        puts("4. Create a domain");
+        puts("5. Save a domain");
+        puts("6. Restore a domain");
+        puts("7. Hostname");
+        puts("8. Exit");
 
-	// Suspend all active domains
-	destroy_domain_by_name(conn, "debian11");
-	printf("\nAll active domains\n");
-	list_domain_infos(conn, "inactive");
+        scanf("%d", &choice);
+        if (choice == 5)
+        {
+            char name[100];
+            printf("Enter the name of the domain to save: ");
+            scanf("%s", name);
+            save_domain_by_name(conn, name);
+        }
+        else if (choice == 6)
+        {
+            char name[100];
+            printf("Enter the name of the domain to restore: ");
+            scanf("%s", name);
+            restore_domain_by_name(conn, name);
+        }
+        else if (choice == 4)
+        {
+            char name[100];
+            printf("Enter the name of the domain to create: ");
+            scanf("%s", name);
+            create_domain_by_name(conn, name);
+        }
+        else if (choice == 3)
+        {
+            char name[100];
+            printf("Enter the name of the domain to destroy: ");
+            scanf("%s", name);
+            destroy_domain_by_name(conn, name);
+        }
+        else if (choice == 2)
+        {
+            list_domain_infos(conn, "inactive");
+        }
+        else if (choice == 1)
+        {
+            list_domain_infos(conn, "active");
+        }
+        else if (choice == 7)
+        {
+            print_hostname(conn);
+        }
+    }
 
-	// Resume all inactive domains
-	create_domain_by_name(conn, "debian11");
-	printf("\nAll inactive domains\n");
-	list_domain_infos(conn, "active");
+    
 
 	virConnectClose(conn);
 	return 0;
@@ -104,6 +148,24 @@ void create_domain_by_name(virConnectPtr conn, char *name)
 	virDomainCreate(domain);
 	virDomainFree(domain);
 	return;
+}
+
+void save_domain_by_name(virConnectPtr conn, char *name)
+{
+    virDomainPtr domain;
+    domain = virDomainLookupByName(conn, name);
+    virDomainSave(domain, "/var/lib/libvirt/qemu/save");
+    virDomainFree(domain);
+    return;
+}
+
+void restore_domain_by_name(virConnectPtr conn, char *name)
+{
+    virDomainPtr domain;
+    domain = virDomainLookupByName(conn, name);
+    virDomainRestore(domain, "/var/lib/libvirt/qemu/save");
+    virDomainFree(domain);
+    return;
 }
 
 void print_hostname(virConnectPtr conn)
