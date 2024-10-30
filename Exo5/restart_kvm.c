@@ -5,6 +5,8 @@
 
 void print_hostname(virConnectPtr conn);
 void list_domain_infos(virConnectPtr conn, char *state);
+void suspend_all_active_domain(virConnectPtr conn);
+void resume_all_inactive_domain(virConnectPtr conn);
 
 int main(int argc, char *argv[])
 {
