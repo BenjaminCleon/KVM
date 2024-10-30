@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <libvirt/libvirt.h>
 
+void print_hostname(virConnectPtr conn);
+
 int main(int argc, char *argv[])
 {
 	virConnectPtr conn;
