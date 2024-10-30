@@ -70,7 +70,14 @@ void list_domain_infos(virConnectPtr conn, char *state)
         virDomainFree(domains[i]);
     }
 
-    free(domains);
+    if (num_domains == 0)
+    {
+        printf("No %s domains\n", state);
+    }
+    else
+    {
+        free(domains);
+    }
 }
 
 void print_hostname(virConnectPtr conn)
