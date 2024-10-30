@@ -9,6 +9,7 @@ void destroy_domain_by_name(virConnectPtr conn, char * name);
 void create_domain_by_name(virConnectPtr conn, char * name);
 void save_domain_by_name(virConnectPtr conn, char * name);
 void restore_domain_by_name(virConnectPtr conn, char * name);
+void migrate_domain(virConnectPtr src, char *name, char *dst_name);
 
 int main(int argc, char *argv[])
 {
@@ -34,7 +35,7 @@ int main(int argc, char *argv[])
     // Main loop
     int choice = 0;
 
-    while(choice != 8)
+    while(choice != 9)
     {
         printf("\n\n\n");
         puts("What do you want to do?");
@@ -45,7 +46,8 @@ int main(int argc, char *argv[])
         puts("5. Save a domain");
         puts("6. Restore a domain");
         puts("7. Hostname");
-        puts("8. Exit");
+        puts("8. Migrate");
+        puts("9. Exit");
 
         scanf("%d", &choice);
         if (choice == 5)
@@ -88,6 +90,17 @@ int main(int argc, char *argv[])
         {
             print_hostname(conn);
         }
+        else if (choice == 8)
+        {
+            char name[100];
+            printf("Enter the name of the domain to migrate: ");
+            scanf("%s", name);
+            char dest_ip[15];
+            printf("Enter the IP address of the destination: ");
+            scanf("%s", dest_ip);
+            
+            migrate_domain(conn, name, dest_ip);
+        }
     }
 
 
@@ -96,6 +109,27 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+void migrate_domain(virConnectPtr src, char *name, char *dst_name)
+{
+    virDomainPtr domain;
+    virConnectPtr dst;
+    domain = virDomainLookupByName(conn, name);
+    char uri[100];
+    sprintf(uri, "qemu+ssh://%s/system", dst_name);
+
+    dst = virConnectOpenAuth(uri, virConnectAuthPtrDefault, 0);
+    if (conn == NULL) {
+		fprintf(stderr, "Failed to open connection to dst\n");
+		return 1;
+	}
+
+    virDomainMigrate(domain, dst, VIR_MIGRATE_LIVE, NULL, NULL, 0);
+    puts("Migration done");
+    virDomainFree(domain);
+    virConnectClose(dst);
+
+    return;
+}
 
 void list_domain_infos(virConnectPtr conn, char *state)
 {
